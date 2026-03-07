@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>奇幻冒险 - 官方微博</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Comic Sans MS', 'Microsoft YaHei', sans-serif;
+        }
+        :root {
+            --primary-color: #6a5acd;
+            --accent-color: #ffd166;
+            --bg-color: #f8f9fa;
+        }
+        body {
+            background-color: var(--bg-color);
+            padding: 50px 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 8px 24px rgba(106, 90, 205, 0.15);
+            text-align: center;
+        }
+        .icon {
+            width: 100px;
+            height: 100px;
+            background-color: rgba(106, 90, 205, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            font-size: 40px;
+            color: var(--primary-color);
+        }
+        h1 {
+            color: var(--primary-color);
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+        p {
+            color: #666;
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        .weibo-link {
+            display: inline-block;
+            padding: 15px 30px;
+            background-color: #e6162d;
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 18px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        .weibo-link:hover {
+            background-color: #c91228;
+            transform: translateY(-2px);
+        }
+        .back-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 25px;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+        }
+        .back-btn:hover {
+            background-color: #5a4bc8;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon">微</div>
+        <h1>奇幻冒险 - 官方微博</h1>
+        <p>关注官方微博，参与话题互动、抽奖活动，和其他玩家一起交流游戏心得，第一时间获取游戏更新爆料！</p>
+        <!-- 跳转到微博官方网站：weibo.com -->
+        <a href="https://weibo.com" class="weibo-link">点击进入微博官网</a>
+        <a href="index.html" class="back-btn">返回首页</a>
+    </div>
+</body>
+</html>

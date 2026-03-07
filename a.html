@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>奇幻冒险 - 官方微信</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Comic Sans MS', 'Microsoft YaHei', sans-serif;
+        }
+        :root {
+            --primary-color: #6a5acd;
+            --accent-color: #ffd166;
+            --bg-color: #f8f9fa;
+        }
+        body {
+            background-color: var(--bg-color);
+            padding: 50px 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 8px 24px rgba(106, 90, 205, 0.15);
+            text-align: center;
+        }
+        .icon {
+            width: 100px;
+            height: 100px;
+            background-color: rgba(106, 90, 205, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            font-size: 40px;
+            color: var(--primary-color);
+        }
+        h1 {
+            color: var(--primary-color);
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+        p {
+            color: #666;
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        /* 微信专属按钮样式 */
+        .wechat-link {
+            display: inline-block;
+            padding: 15px 30px;
+            background-color: #07c160;
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 18px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+        .wechat-link:hover {
+            background-color: #06b058;
+            transform: translateY(-2px);
+        }
+        /* 公众号提示文字 */
+        .account-tips {
+            color: #333;
+            font-size: 16px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+        .back-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 25px;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+        }
+        .back-btn:hover {
+            background-color: #5a4bc8;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon">微</div>
+        <h1>奇幻冒险 - 官方微信</h1>
+        <p>关注官方微信公众号，获取最新游戏资讯、独家攻略、福利活动，还有专属客服为你解答问题！</p>
+        <!-- 直接跳转微信官网 + 显示公众号信息 -->
+        <a href="https://weixin.qq.com" class="wechat-link">点击进入微信官网</a>
+        <div class="account-tips">公众号名称：刘宇杰666</div>
+        <a href="index.html" class="back-btn">返回首页</a>
+    </div>
+</body>
+</html>
