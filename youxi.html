@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>奇幻冒险 - 初步认识</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Comic Sans MS', 'Microsoft YaHei', sans-serif;
+        }
+
+        :root {
+            --primary-color: #6a5acd;
+            --secondary-color: #ff6b81;
+            --accent-color: #ffd166;
+            --text-color: #333;
+            --bg-color: #f8f9fa;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4eaf5 100%);
+            color: var(--text-color);
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* 统一返回按钮样式 - 单按钮无重叠，位置固定左上角 */
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 9999;
+            padding: 10px 20px;
+            border-radius: 50px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            background: rgba(106, 90, 205, 0.8);
+            color: white;
+            box-shadow: 0 4px 15px rgba(106, 90, 205, 0.2);
+        }
+
+        .back-button:hover {
+            background: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(106, 90, 205, 0.3);
+        }
+
+        /* 预约成功界面美化 */
+        .booking-success {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 80vh;
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #6a5acd 0%, #8a77e0 100%);
+            border-radius: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(106, 90, 205, 0.3);
+            color: white;
+        }
+
+        .success-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            color: var(--accent-color);
+            animation: bounce 1s ease-in-out;
+        }
+
+        .success-title {
+            font-size: 42px;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .success-desc {
+            font-size: 20px;
+            margin-bottom: 30px;
+            max-width: 600px;
+            line-height: 1.6;
+        }
+
+        .enter-game-btn {
+            padding: 18px 40px;
+            border-radius: 50px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 20px;
+            background: var(--accent-color);
+            color: var(--primary-color);
+            box-shadow: 0 8px 20px rgba(255, 209, 102, 0.4);
+        }
+
+        .enter-game-btn:hover {
+            background: #ffc44d;
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(255, 209, 102, 0.5);
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        header {
+            text-align: center;
+            padding: 30px 0;
+            background: white;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 24px rgba(106, 90, 205, 0.15);
+        }
+
+        h1 {
+            color: var(--primary-color);
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 18px;
+        }
+
+        .character-select {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .character-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 8px 24px rgba(106, 90, 205, 0.15);
+        }
+
+        .character-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(106, 90, 205, 0.2);
+        }
+
+        .character-card.selected {
+            border: 4px solid var(--primary-color);
+        }
+
+        .character-img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+
+        .character-info {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .character-name {
+            font-size: 24px;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .character-role {
+            color: var(--secondary-color);
+            font-weight: 500;
+            background: rgba(255, 107, 129, 0.1);
+            padding: 5px 15px;
+            border-radius: 50px;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        .character-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 15px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .game-area {
+            display: none;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 24px rgba(106, 90, 205, 0.15);
+        }
+
+        .battle-field {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            min-height: 300px;
+        }
+
+        .combatant {
+            text-align: center;
+            width: 40%;
+        }
+
+        .combatant-img {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 15px;
+            border: 4px solid var(--primary-color);
+        }
+
+        .health-bar {
+            width: 100%;
+            height: 20px;
+            background: #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .health-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+            transition: width 0.3s ease;
+        }
+
+        .battle-log {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            height: 200px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+
+        .log-entry {
+            margin-bottom: 10px;
+            padding: 8px;
+            border-radius: 5px;
+        }
+
+        .log-player {
+            background: rgba(106, 90, 205, 0.1);
+            color: var(--primary-color);
+        }
+
+        .log-enemy {
+            background: rgba(255, 107, 129, 0.1);
+            color: var(--secondary-color);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border-radius: 50px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            position: relative;
+        }
+
+        /* 治疗次数提示角标 */
+        .heal-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--secondary-color);
+            color: white;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5a4bc8;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(106, 90, 205, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--accent-color);
+            color: var(--primary-color);
+        }
+
+        .btn-secondary:hover {
+            background: #ffc44d;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 209, 102, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* 战绩结算页面样式 */
+        .result-screen {
+            display: none;
+            background: white;
+            border-radius: 20px;
+            padding: 50px 30px;
+            box-shadow: 0 15px 30px rgba(106, 90, 205, 0.2);
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .result-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        .win-icon {
+            color: #4CAF50;
+        }
+
+        .lose-icon {
+            color: var(--secondary-color);
+        }
+
+        .result-title {
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+
+        .result-stats {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 30px 0;
+            text-align: left;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .result-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .back-btn {
+            background: #999;
+            color: white;
+        }
+
+        .back-btn:hover {
+            background: #777;
+        }
+
+        .restart-btn {
+            background: var(--accent-color);
+            color: var(--primary-color);
+        }
+
+        .restart-btn:hover {
+            background: #ffc44d;
+        }
+
+        /* 核心修改：弹窗式正式游戏预告页（遮罩+居中悬浮） */
+        .mask {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 9998;
+            backdrop-filter: blur(5px);
+        }
+        .coming-soon-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 9999;
+            background: linear-gradient(135deg, #6a5acd 0%, #8a77e0 100%);
+            border-radius: 30px;
+            padding: 50px 30px;
+            text-align: center;
+            color: white;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            max-width: 500px;
+            width: 90%;
+            animation: popUp 0.5s ease-out;
+        }
+        /* 弹窗弹出动画 */
+        @keyframes popUp {
+            0% { transform: translate(-50%, -60%) scale(0.8); opacity: 0; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+        .coming-soon-icon {
+            font-size: 100px;
+            margin-bottom: 20px;
+            color: var(--accent-color);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        .coming-soon-title {
+            font-size: 36px;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        .coming-soon-desc {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        .back-to-home-btn {
+            padding: 15px 35px;
+            border-radius: 50px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 18px;
+            background: var(--accent-color);
+            color: var(--primary-color);
+            box-shadow: 0 8px 20px rgba(255, 209, 102, 0.4);
+        }
+        .back-to-home-btn:hover {
+            background: #ffc44d;
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(255, 209, 102, 0.5);
+        }
+
+        @media (max-width: 768px) {
+            .character-select {
+                grid-template-columns: 1fr;
+            }
+            .battle-field {
+                flex-direction: column;
+                gap: 30px;
+            }
+            .combatant {
+                width: 100%;
+            }
+            .result-buttons {
+                flex-direction: column;
+            }
+            .coming-soon-title {
+                font-size: 28px;
+            }
+            .coming-soon-icon {
+                font-size: 80px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 单返回按钮 - 互斥显示，无重叠 -->
+    <button class="back-button" id="backButton">← 返回首页</button>
+
+    <!-- 核心新增：弹窗遮罩 + 正式游戏预告弹窗 -->
+    <div class="mask" id="mask"></div>
+    <div class="coming-soon-popup" id="comingSoonPopup">
+        <div class="coming-soon-icon">🚀</div>
+        <h2 class="coming-soon-title">正式游戏即将开启！</h2>
+        <p class="coming-soon-desc">恭喜你完成了试玩挑战！正式版《奇幻冒险》正在紧张筹备中，更多角色、更丰富的剧情和刺激的多人对战模式即将上线，敬请期待！</p>
+        <button class="back-to-home-btn" id="backToHomeBtn">返回首页</button>
+    </div>
+    
+    <div class="container">
+        <!-- 预约成功界面 -->
+        <div class="booking-success" id="bookingSuccess">
+            <div class="success-icon">🎉</div>
+            <h2 class="success-title">预约成功！</h2>
+            <p class="success-desc">感谢你预约体验奇幻冒险，我们已为你准备好专属游戏角色，马上开启你的冒险之旅吧！</p>
+            <button class="enter-game-btn" id="enterGameBtn">进入游戏</button>
+        </div>
+
+        <!-- 游戏主界面 -->
+        <div id="gameMain" style="display: none;">
+            <header>
+                <h1>奇幻冒险</h1>
+                <p class="subtitle">初步体验奇幻冒险选择你的角色，开启冒险之旅！</p>
+            </header>
+
+            <div class="character-select" id="characterSelect">
+                <!-- 角色1：勇敢小熊 - 10.webp -->
+                <div class="character-card" data-character="brave-bear">
+                    <img src="10.webp" alt="勇敢小熊" class="character-img">
+                    <div class="character-info">
+                        <h3 class="character-name">勇敢小熊</h3>
+                        <span class="character-role">力量型战士</span>
+                        <div class="character-stats">
+                            <div class="stat">
+                                <div class="stat-value">100</div>
+                                <div class="stat-label">生命值</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value">20</div>
+                                <div class="stat-label">攻击力</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value">15</div>
+                                <div class="stat-label">防御力</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 角色2：智慧狐狸 - 11.webp -->
+                <div class="character-card" data-character="wise-fox">
+                    <img src="11.webp" alt="智慧狐狸" class="character-img">
+                    <div class="character-info">
+                        <h3 class="character-name">智慧狐狸</h3>
+                        <span class="character-role">智力型法师</span>
+                        <div class="character-stats">
+                            <div class="stat">
+                                <div class="stat-value">80</div>
+                                <div class="stat-label">生命值</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value">25</div>
+                                <div class="stat-label">攻击力</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value">10</div>
+                                <div class="stat-label">防御力</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 角色3：阳光小兔 - 9.webp -->
+                <div class="character-card" data-character="sunny-bunny">
+                    <img src="9.webp" alt="阳光小兔" class="character-img">
+                    <div class="character-info">
+                        <h3 class="character-name">阳光小兔</h3>
+                        <span class="character-role">治愈系辅助</span>
+                        <div class="character-stats">
+                            <div class="stat">
+                                <div class="stat-value">90</div>
+                                <div class="stat-label">生命值</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value">15</div>
+                                <div class="stat-label">攻击力</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value">12</div>
+                                <div class="stat-label">防御力</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 角色4：敏捷松鼠 - 12.webp -->
+                <div class="character-card" data-character="agile-squirrel">
+                    <img src="12.webp" alt="敏捷松鼠" class="character-img">
+                    <div class="character-info">
+                        <h3 class="character-name">敏捷松鼠</h3>
+                        <span class="character-role">速度型刺客</span>
+                        <div class="character-stats">
+                            <div class="stat">
+                                <div class="stat-value">75</div>
+                                <div class="stat-label">生命值</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value">30</div>
+                                <div class="stat-label">攻击力</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value">8</div>
+                                <div class="stat-label">防御力</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-bottom: 30px;">
+                <button class="btn btn-primary" id="startGameBtn" disabled>开始冒险</button>
+            </div>
+
+            <!-- 战斗界面 -->
+            <div class="game-area" id="gameArea">
+                <div class="battle-field">
+                    <div class="combatant player">
+                        <img src="" alt="玩家角色" class="combatant-img" id="playerImg">
+                        <h3 id="playerName">玩家角色</h3>
+                        <div class="health-bar">
+                            <div class="health-fill" id="playerHealth" style="width: 100%"></div>
+                        </div>
+                        <div id="playerHealthText">100/100</div>
+                    </div>
+
+                    <div class="vs-text" style="font-size: 48px; font-weight: bold; color: var(--secondary-color);">VS</div>
+
+                    <div class="combatant enemy">
+                        <!-- 邪恶灰狼图片 - 15.webp -->
+                        <img src="15.webp" alt="邪恶灰狼" class="combatant-img">
+                        <h3>邪恶灰狼</h3>
+                        <div class="health-bar">
+                            <div class="health-fill" id="enemyHealth" style="width: 100%"></div>
+                        </div>
+                        <div id="enemyHealthText">100/100</div>
+                    </div>
+                </div>
+
+                <div class="battle-log" id="battleLog">
+                    <div class="log-entry log-player">战斗开始！选择你的行动。</div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-primary" id="attackBtn">普通攻击</button>
+                    <button class="btn btn-secondary" id="skillBtn">使用技能</button>
+                    <!-- 新增：治疗按钮添加次数角标 -->
+                    <button class="btn btn-secondary" id="healBtn">治疗自己<span class="heal-count" id="healCount">3</span></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 战绩结算页面 -->
+        <div class="result-screen" id="resultScreen">
+            <div class="result-icon" id="resultIcon">🏆</div>
+            <h2 class="result-title" id="resultTitle">战斗胜利！</h2>
+            <div class="result-stats">
+                <div class="stat-item">
+                    <span>使用角色：</span>
+                    <span id="resultCharacter">勇敢小熊</span>
+                </div>
+                <div class="stat-item">
+                    <span>造成总伤害：</span>
+                    <span id="resultDamage">0</span>
+                </div>
+                <div class="stat-item">
+                    <span>剩余生命值：</span>
+                    <span id="resultHealth">100</span>
+                </div>
+                <div class="stat-item">
+                    <span>战斗时长：</span>
+                    <span id="resultTime">00:30</span>
+                </div>
+            </div>
+            <div class="result-buttons">
+                <button class="btn back-btn" id="backToSelectBtn">返回角色选择</button>
+                <button class="btn restart-btn" id="restartGameBtn">重新开始战斗</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 角色数据（替换为本地图片路径）
+        const characters = {
+            'brave-bear': {
+                name: '勇敢小熊',
+                role: '力量型战士',
+                health: 100,
+                attack: 20,
+                defense: 15,
+                img: '10.webp', // 勇敢小熊 - 10.webp
+                skill: '坚不可摧'
+            },
+            'wise-fox': {
+                name: '智慧狐狸',
+                role: '智力型法师',
+                health: 80,
+                attack: 25,
+                defense: 10,
+                img: '11.webp', // 智慧狐狸 - 11.webp
+                skill: '火焰魔法'
+            },
+            'sunny-bunny': {
+                name: '阳光小兔',
+                role: '治愈系辅助',
+                health: 90,
+                attack: 15,
+                defense: 12,
+                img: '9.webp', // 阳光小兔 - 9.webp
+                skill: '治愈光波'
+            },
+            'agile-squirrel': {
+                name: '敏捷松鼠',
+                role: '速度型刺客',
+                health: 75,
+                attack: 30,
+                defense: 8,
+                img: '12.webp', // 敏捷松鼠 - 12.webp
+                skill: '疾风突袭'
+            }
+        };
+
+        // 游戏状态变量
+        let selectedCharacter = null;
+        let playerHealth = 0;
+        let enemyHealth = 0;
+        let enemyMaxHealth = 0;
+        let totalDamage = 0;
+        let battleStartTime = 0;
+        let healTimes = 3; // 核心新增：治疗次数限制（全局3次）
+        const backButton = document.getElementById('backButton');
+        const healCountDom = document.getElementById('healCount'); // 治疗次数角标DOM
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化界面状态
+            document.getElementById('bookingSuccess').style.display = 'flex';
+            document.getElementById('gameMain').style.display = 'none';
+            document.getElementById('gameArea').style.display = 'none';
+            document.getElementById('resultScreen').style.display = 'none';
+            document.getElementById('mask').style.display = 'none'; // 隐藏遮罩
+            document.getElementById('comingSoonPopup').style.display = 'none'; // 隐藏预告弹窗
+            backButton.innerText = '← 返回首页';
+        });
+
+        // 核心：返回按钮互斥逻辑（根据当前界面切换功能和文字）
+        backButton.addEventListener('click', function() {
+            // 重置治疗次数
+            healTimes = 3;
+            healCountDom.innerText = healTimes;
+            document.getElementById('healBtn').disabled = false;
+
+            // 状态1：当前是预约成功界面 → 跳转到index.html
+            if (document.getElementById('bookingSuccess').style.display === 'flex') {
+                window.location.href = 'index.html';
+            } 
+            // 状态2：当前是游戏内界面 → 返回预约成功界面并重置所有状态
+            else {
+                // 关闭弹窗和遮罩
+                document.getElementById('mask').style.display = 'none';
+                document.getElementById('comingSoonPopup').style.display = 'none';
+
+                // 重置所有游戏状态
+                selectedCharacter = null;
+                playerHealth = 0;
+                enemyHealth = 0;
+                enemyMaxHealth = 0;
+                totalDamage = 0;
+                battleStartTime = 0;
+
+                // 隐藏所有游戏界面，显示初始界面
+                document.getElementById('gameMain').style.display = 'none';
+                document.getElementById('gameArea').style.display = 'none';
+                document.getElementById('resultScreen').style.display = 'none';
+                document.getElementById('bookingSuccess').style.display = 'flex';
+
+                // 重置UI状态
+                document.querySelectorAll('.character-card').forEach(c => c.classList.remove('selected'));
+                document.getElementById('startGameBtn').disabled = true;
+                document.getElementById('battleLog').innerHTML = '<div class="log-entry log-player">战斗开始！选择你的行动。</div>';
+                document.getElementById('attackBtn').disabled = false;
+                document.getElementById('skillBtn').disabled = false;
+
+                // 确保角色选择界面显示
+                document.getElementById('characterSelect').style.display = 'grid';
+                document.getElementById('startGameBtn').style.display = 'inline-block';
+
+                // 按钮文字切回：返回首页
+                backButton.innerText = '← 返回首页';
+            }
+        });
+
+        // 预约成功进入游戏
+        document.getElementById('enterGameBtn').addEventListener('click', function() {
+            document.getElementById('bookingSuccess').style.display = 'none';
+            document.getElementById('gameMain').style.display = 'block';
+            backButton.innerText = '← 返回游戏初始';
+        });
+
+        // 角色选择
+        document.querySelectorAll('.character-card').forEach(card => {
+            card.addEventListener('click', function() {
+                document.querySelectorAll('.character-card').forEach(c => c.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedCharacter = this.dataset.character;
+                document.getElementById('startGameBtn').disabled = false;
+            });
+        });
+
+        // 开始游戏 - 灰狼血量与玩家匹配（平衡难度，无碾压）
+        document.getElementById('startGameBtn').addEventListener('click', function() {
+            if (!selectedCharacter) return;
+            // 开始新战斗重置治疗次数
+            healTimes = 3;
+            healCountDom.innerText = healTimes;
+            document.getElementById('healBtn').disabled = false;
+
+            const char = characters[selectedCharacter];
+            playerHealth = char.health;
+            
+            // 灰狼血量与玩家持平/微高（5%-10%），无碾压，对战有来有回
+            switch(selectedCharacter) {
+                case 'brave-bear':
+                    enemyMaxHealth = 105; // 小熊100血 → 灰狼微高5%
+                    break;
+                case 'wise-fox':
+                    enemyMaxHealth = 85;  // 狐狸80血 → 灰狼微高5%
+                    break;
+                case 'sunny-bunny':
+                    enemyMaxHealth = 95;  // 小兔90血 → 灰狼微高5%
+                    break;
+                case 'agile-squirrel':
+                    enemyMaxHealth = 80;  // 松鼠75血 → 灰狼微高5%
+                    break;
+            }
+            enemyHealth = enemyMaxHealth;
+            totalDamage = 0;
+            battleStartTime = new Date().getTime();
+
+            // 更新游戏界面
+            document.getElementById('characterSelect').style.display = 'none';
+            this.style.display = 'none';
+            document.getElementById('gameArea').style.display = 'block';
+            document.getElementById('playerImg').src = char.img;
+            document.getElementById('playerName').textContent = char.name;
+            document.getElementById('playerHealth').style.width = '100%';
+            document.getElementById('playerHealthText').textContent = `${playerHealth}/${char.health}`;
+            document.getElementById('enemyHealth').style.width = '100%';
+            document.getElementById('enemyHealthText').textContent = `${enemyHealth}/${enemyMaxHealth}`;
+
+            // 重置按钮状态
+            document.getElementById('attackBtn').disabled = false;
+            document.getElementById('skillBtn').disabled = false;
+
+            addLog(`你选择了${char.name}，准备迎战邪恶灰狼！`, 'player');
+            addLog('邪恶灰狼发出凶狠的咆哮，战斗一触即发！', 'enemy');
+        });
+
+        // 普通攻击
+        document.getElementById('attackBtn').addEventListener('click', function() {
+            if (playerHealth <= 0 || enemyHealth <= 0) return;
+
+            const char = characters[selectedCharacter];
+            const damage = Math.floor(Math.random() * char.attack) + 10;
+            totalDamage += damage;
+            enemyHealth = Math.max(0, enemyHealth - damage);
+
+            addLog(`${char.name} 发起普通攻击，对邪恶灰狼造成 ${damage} 点伤害！`, 'player');
+            updateEnemyHealth();
+
+            if (enemyHealth <= 0) {
+                addLog('邪恶灰狼被击败了！你获得了胜利！🎉', 'player');
+                showResultScreen(true);
+                return;
+            }
+
+            // 灰狼普通反击（伤害与玩家普通攻击持平）
+            enemyAttack(char);
+        });
+
+        // 使用技能
+        document.getElementById('skillBtn').addEventListener('click', function() {
+            if (playerHealth <= 0 || enemyHealth <= 0) return;
+
+            const char = characters[selectedCharacter];
+            let damage = 0;
+
+            switch(selectedCharacter) {
+                case 'brave-bear':
+                    damage = Math.floor(Math.random() * 30) + 20;
+                    totalDamage += damage;
+                    addLog(`${char.name} 使用了【${char.skill}】，防御大幅提升，对邪恶灰狼造成 ${damage} 点伤害！`, 'player');
+                    break;
+                case 'wise-fox':
+                    damage = Math.floor(Math.random() * 40) + 25;
+                    totalDamage += damage;
+                    addLog(`${char.name} 使用了【${char.skill}】，释放火焰魔法，对邪恶灰狼造成 ${damage} 点魔法伤害！`, 'player');
+                    break;
+                case 'sunny-bunny':
+                    const heal = Math.floor(Math.random() * 20) + 15;
+                    playerHealth = Math.min(char.health, playerHealth + heal);
+                    addLog(`${char.name} 使用了【${char.skill}】，释放治愈光波，恢复了 ${heal} 点生命值！`, 'player');
+                    updatePlayerHealth();
+                    break;
+                case 'agile-squirrel':
+                    damage = Math.floor(Math.random() * 50) + 30;
+                    totalDamage += damage;
+                    addLog(`${char.name} 使用了【${char.skill}】，疾风突袭！对邪恶灰狼造成 ${damage} 点暴击伤害！`, 'player');
+                    break;
+            }
+
+            if (damage > 0) {
+                enemyHealth = Math.max(0, enemyHealth - damage);
+                updateEnemyHealth();
+
+                if (enemyHealth <= 0) {
+                    addLog('邪恶灰狼被击败了！你获得了胜利！🎉', 'player');
+                    showResultScreen(true);
+                    return;
+                }
+            }
+
+            // 灰狼技能反击（伤害与玩家技能伤害持平，触发概率50%）
+            const skillCounter = Math.random() > 0.5;
+            if (skillCounter) {
+                enemySkillAttack(char);
+            } else {
+                enemyAttack(char);
+            }
+        });
+
+        // 核心修改：治疗自己（3次限制，用完禁用）
+        document.getElementById('healBtn').addEventListener('click', function() {
+            if (playerHealth <= 0 || enemyHealth <= 0 || healTimes <= 0) return;
+
+            const char = characters[selectedCharacter];
+            const heal = Math.floor(Math.random() * 15) + 10;
+            playerHealth = Math.min(char.health, playerHealth + heal);
+            healTimes--; // 减少治疗次数
+            healCountDom.innerText = healTimes; // 更新角标数字
+
+            addLog(`${char.name} 使用了治疗，恢复了 ${heal} 点生命值！剩余治疗次数：${healTimes}`, 'player');
+            updatePlayerHealth();
+
+            // 治疗次数为0时禁用按钮
+            if (healTimes <= 0) {
+                this.disabled = true;
+                addLog('治疗次数已用尽，无法再进行治疗！', 'player');
+            }
+
+            // 灰狼暴怒攻击（伤害比普通攻击高20%，与玩家治疗收益匹配）
+            enemyFuryAttack(char);
+        });
+
+        // 返回角色选择
+        document.getElementById('backToSelectBtn').addEventListener('click', function() {
+            // 重置治疗次数
+            healTimes = 3;
+            healCountDom.innerText = healTimes;
+            document.getElementById('healBtn').disabled = false;
+
+            document.getElementById('resultScreen').style.display = 'none';
+            document.getElementById('gameArea').style.display = 'none';
+            document.getElementById('characterSelect').style.display = 'grid';
+            document.getElementById('startGameBtn').style.display = 'inline-block';
+            document.getElementById('startGameBtn').disabled = true;
+            
+            // 清除角色选择
+            document.querySelectorAll('.character-card').forEach(c => c.classList.remove('selected'));
+            selectedCharacter = null;
+        });
+
+        // 重新开始战斗
+        document.getElementById('restartGameBtn').addEventListener('click', function() {
+            // 重置治疗次数
+            healTimes = 3;
+            healCountDom.innerText = healTimes;
+            document.getElementById('healBtn').disabled = false;
+
+            document.getElementById('resultScreen').style.display = 'none';
+            document.getElementById('gameArea').style.display = 'block';
+            
+            // 重置战斗状态
+            const char = characters[selectedCharacter];
+            playerHealth = char.health;
+            
+            // 重新设置与玩家匹配的灰狼血量
+            switch(selectedCharacter) {
+                case 'brave-bear':
+                    enemyMaxHealth = 105;
+                    break;
+                case 'wise-fox':
+                    enemyMaxHealth = 85;
+                    break;
+                case 'sunny-bunny':
+                    enemyMaxHealth = 95;
+                    break;
+                case 'agile-squirrel':
+                    enemyMaxHealth = 80;
+                    break;
+            }
+            enemyHealth = enemyMaxHealth;
+            totalDamage = 0;
+            battleStartTime = new Date().getTime();
+
+            // 更新UI
+            document.getElementById('playerHealth').style.width = '100%';
+            document.getElementById('playerHealthText').textContent = `${playerHealth}/${char.health}`;
+            document.getElementById('enemyHealth').style.width = '100%';
+            document.getElementById('enemyHealthText').textContent = `${enemyHealth}/${enemyMaxHealth}`;
+
+            // 清空日志并重置按钮
+            document.getElementById('battleLog').innerHTML = '<div class="log-entry log-player">战斗开始！选择你的行动。</div>';
+            document.getElementById('attackBtn').disabled = false;
+            document.getElementById('skillBtn').disabled = false;
+        });
+
+        // 新增：弹窗返回首页按钮事件
+        document.getElementById('backToHomeBtn').addEventListener('click', function() {
+            // 重置治疗次数
+            healTimes = 3;
+            healCountDom.innerText = healTimes;
+            document.getElementById('healBtn').disabled = false;
+
+            // 关闭弹窗和遮罩
+            document.getElementById('mask').style.display = 'none';
+            document.getElementById('comingSoonPopup').style.display = 'none';
+
+            // 重置所有游戏状态
+            selectedCharacter = null;
+            playerHealth = 0;
+            enemyHealth = 0;
+            enemyMaxHealth = 0;
+            totalDamage = 0;
+            battleStartTime = 0;
+
+            // 回到预约成功界面
+            document.getElementById('gameMain').style.display = 'none';
+            document.getElementById('gameArea').style.display = 'none';
+            document.getElementById('resultScreen').style.display = 'none';
+            document.getElementById('bookingSuccess').style.display = 'flex';
+
+            // 重置UI
+            document.querySelectorAll('.character-card').forEach(c => c.classList.remove('selected'));
+            document.getElementById('startGameBtn').disabled = true;
+            document.getElementById('battleLog').innerHTML = '<div class="log-entry log-player">战斗开始！选择你的行动。</div>';
+            document.getElementById('attackBtn').disabled = false;
+            document.getElementById('skillBtn').disabled = false;
+            document.getElementById('characterSelect').style.display = 'grid';
+            document.getElementById('startGameBtn').style.display = 'inline-block';
+
+            // 按钮文字切回：返回首页
+            backButton.innerText = '← 返回首页';
+        });
+
+        // 更新玩家生命值
+        function updatePlayerHealth() {
+            const char = characters[selectedCharacter];
+            const healthPercent = (playerHealth / char.health) * 100;
+            document.getElementById('playerHealth').style.width = `${healthPercent}%`;
+            document.getElementById('playerHealthText').textContent = `${playerHealth}/${char.health}`;
+        }
+
+        // 更新敌人生命值
+        function updateEnemyHealth() {
+            const healthPercent = (enemyHealth / enemyMaxHealth) * 100;
+            document.getElementById('enemyHealth').style.width = `${healthPercent}%`;
+            document.getElementById('enemyHealthText').textContent = `${enemyHealth}/${enemyMaxHealth}`;
+        }
+
+        // 添加战斗日志
+        function addLog(text, type = 'player') {
+            const log = document.getElementById('battleLog');
+            const entry = document.createElement('div');
+            entry.className = `log-entry log-${type}`;
+            entry.textContent = text;
+            log.appendChild(entry);
+            log.scrollTop = log.scrollHeight;
+        }
+
+        // 显示战绩结算页面
+        function showResultScreen(isWin) {
+            // 禁用战斗按钮
+            document.getElementById('attackBtn').disabled = true;
+            document.getElementById('skillBtn').disabled = true;
+            document.getElementById('healBtn').disabled = true;
+
+            // 计算战斗时长
+            const battleEndTime = new Date().getTime();
+            const battleDuration = Math.floor((battleEndTime - battleStartTime) / 1000);
+            const minutes = Math.floor(battleDuration / 60).toString().padStart(2, '0');
+            const seconds = (battleDuration % 60).toString().padStart(2, '0');
+            const battleTime = `${minutes}:${seconds}`;
+
+            // 更新结算页面内容
+            const char = characters[selectedCharacter];
+            document.getElementById('resultCharacter').textContent = char.name;
+            document.getElementById('resultDamage').textContent = totalDamage;
+            document.getElementById('resultHealth').textContent = playerHealth;
+            document.getElementById('resultTime').textContent = battleTime;
+
+            // 根据胜负处理
+            if (isWin) {
+                document.getElementById('resultIcon').className = 'result-icon win-icon';
+                document.getElementById('resultIcon').textContent = '🏆';
+                document.getElementById('resultTitle').textContent = '战斗胜利！';
+                document.getElementById('gameArea').style.display = 'none';
+                document.getElementById('resultScreen').style.display = 'block';
+
+                // 核心修改：2秒后弹出预告弹窗（不是下拉）
+                setTimeout(() => {
+                    document.getElementById('resultScreen').style.display = 'none';
+                    document.getElementById('mask').style.display = 'block'; // 显示遮罩
+                    document.getElementById('comingSoonPopup').style.display = 'block'; // 显示弹窗
+                }, 2000);
+            } else {
+                document.getElementById('resultIcon').className = 'result-icon lose-icon';
+                document.getElementById('resultIcon').textContent = '💥';
+                document.getElementById('resultTitle').textContent = '战斗失败';
+                document.getElementById('gameArea').style.display = 'none';
+                document.getElementById('resultScreen').style.display = 'block';
+            }
+        }
+
+        // ===== 邪恶灰狼平衡核心函数（伤害与玩家角色完全持平，对战有来有回）=====
+        // 1. 普通攻击：伤害与玩家普通攻击完全一致 + 30%概率无视防御（增加少量随机性）
+        function enemyAttack(char) {
+            setTimeout(() => {
+                // 灰狼普通攻击伤害 = 玩家普通攻击伤害区间（Math.random()*char.attack + 10）
+                const baseDamage = Math.floor(Math.random() * char.attack) + 10;
+                
+                // 30%概率无视防御（增加战斗随机性，不破坏平衡）
+                const ignoreDefense = Math.random() > 0.7;
+                let finalDamage = baseDamage;
+                
+                if (!ignoreDefense) {
+                    finalDamage = Math.max(1, finalDamage - char.defense);
+                    addLog(`邪恶灰狼发起攻击，对你造成 ${finalDamage} 点伤害（防御减免 ${baseDamage - finalDamage} 点）！`, 'enemy');
+                } else {
+                    addLog(`邪恶灰狼发起暴击攻击，无视你的防御，造成 ${finalDamage} 点伤害！`, 'enemy');
+                }
+
+                playerHealth = Math.max(0, playerHealth - finalDamage);
+                updatePlayerHealth();
+
+                if (playerHealth <= 0) {
+                    addLog('你被邪恶灰狼击败了！😢', 'enemy');
+                    showResultScreen(false);
+                }
+            }, 800);
+        }
+
+        // 2. 技能反击：伤害与玩家对应技能伤害持平（无碾压）
+        function enemySkillAttack(char) {
+            setTimeout(() => {
+                let skillDamage = 0;
+
+                // 灰狼技能伤害与玩家对应技能伤害完全匹配
+                switch(selectedCharacter) {
+                    case 'brave-bear':
+                        skillDamage = Math.floor(Math.random() * 30) + 20; // 匹配小熊技能伤害
+                        break;
+                    case 'wise-fox':
+                        skillDamage = Math.floor(Math.random() * 40) + 25; // 匹配狐狸技能伤害
+                        break;
+                    case 'sunny-bunny':
+                        skillDamage = Math.floor(Math.random() * 20) + 15; // 匹配小兔治疗收益，作为反击伤害
+                        break;
+                    case 'agile-squirrel':
+                        skillDamage = Math.floor(Math.random() * 50) + 30; // 匹配松鼠技能伤害
+                        break;
+                }
+
+                // 技能反击必无视防御（规则不变，伤害与玩家持平）
+                addLog(`邪恶灰狼触发技能反击「狂怒撕咬」，造成 ${skillDamage} 点高额伤害！`, 'enemy');
+                playerHealth = Math.max(0, playerHealth - skillDamage);
+                updatePlayerHealth();
+
+                if (playerHealth <= 0) {
+                    addLog('你被邪恶灰狼的技能击败了！😢', 'enemy');
+                    showResultScreen(false);
+                }
+            }, 800);
+        }
+
+        // 3. 暴怒攻击：玩家治疗时触发，伤害比普通攻击高20%（与治疗收益匹配）
+        function enemyFuryAttack(char) {
+            setTimeout(() => {
+                // 暴怒攻击伤害 = 普通攻击伤害 * 1.2（与玩家治疗收益匹配，不超标）
+                const baseDamage = Math.floor((Math.floor(Math.random() * char.attack) + 10) * 1.2);
+                
+                addLog(`邪恶灰狼因你治疗而暴怒！发起猛攻，造成 ${baseDamage} 点伤害！`, 'enemy');
+                playerHealth = Math.max(0, playerHealth - baseDamage);
+                updatePlayerHealth();
+
+                if (playerHealth <= 0) {
+                    addLog('你被暴怒的邪恶灰狼击败了！😢', 'enemy');
+                    showResultScreen(false);
+                }
+            }, 800);
+        }
+    </script>
+</body>
+</html>
