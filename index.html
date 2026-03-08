@@ -340,6 +340,7 @@
             padding: 0 15px;
             display: flex;
             justify-content: center; /* 单个卡片内容居中 */
+            cursor: pointer;
         }
 
         .character-inner {
@@ -455,10 +456,10 @@
         .testimonial-quote {
             font-size: 50px;
             color: var(--accent-color);
+            opacity: 0.3;
             position: absolute;
             top: 20px;
             left: 30px;
-            opacity: 0.3;
         }
 
         .testimonial-text {
@@ -673,6 +674,10 @@
                 display: none;
             }
 
+            .menu-toggle {
+                display: block !important;
+            }
+
             .section-title {
                 font-size: 32px;
             }
@@ -751,6 +756,102 @@
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
+
+        /* 汉堡菜单样式 */
+        .menu-toggle {
+            font-size: 24px;
+            cursor: pointer;
+            display: none;
+        }
+
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 250px;
+            height: 100%;
+            background: white;
+            z-index: 9999;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            padding: 80px 20px;
+            box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+        }
+
+        .close-menu {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        /* 角色详情弹窗样式 */
+        .character-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            padding: 20px;
+        }
+
+        /* 视频弹窗样式 */
+        #videoModal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #videoModal video {
+            max-width: 90%;
+            max-height: 90vh;
+        }
+
+        #closeVideo {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+        }
+
+        /* 倒计时样式 */
+        #countdown {
+            font-size: 28px;
+            margin: 20px 0;
+            color: var(--accent-color);
+        }
+
+        /* 预约人数样式 */
+        #bookingCount {
+            margin-top: 20px;
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        #bookingCount span {
+            color: var(--accent-color);
+            font-size: 20px;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -774,10 +875,27 @@
                     <li><a href="#testimonials">用户评价</a></li>
                     <li><a href="#cta">预约体验</a></li>
                 </ul>
+                <!-- 汉堡菜单按钮 -->
+                <div class="menu-toggle" id="menuToggle">
+                    ☰
+                </div>
                 <a href="#cta" class="btn btn-primary">立即预约</a>
             </nav>
         </div>
     </header>
+
+    <!-- 移动端导航菜单 -->
+    <div class="mobile-menu" id="mobileMenu">
+        <button class="close-menu" id="closeMenu">&times;</button>
+        <ul>
+            <li style="margin-bottom: 20px;"><a href="#home" style="text-decoration: none; color: #333; font-size: 18px;">首页</a></li>
+            <li style="margin-bottom: 20px;"><a href="#features" style="text-decoration: none; color: #333; font-size: 18px;">游戏特色</a></li>
+            <li style="margin-bottom: 20px;"><a href="#characters" style="text-decoration: none; color: #333; font-size: 18px;">游戏角色</a></li>
+            <li style="margin-bottom: 20px;"><a href="#testimonials" style="text-decoration: none; color: #333; font-size: 18px;">用户评价</a></li>
+            <li style="margin-bottom: 20px;"><a href="#cta" style="text-decoration: none; color: #333; font-size: 18px;">预约体验</a></li>
+        </ul>
+        <a href="#cta" class="btn btn-primary" style="margin-top: 20px; display: block; text-align: center;">立即预约</a>
+    </div>
 
     <!-- 英雄区 -->
     <section class="hero" id="home">
@@ -791,6 +909,12 @@
                     <div class="hero-buttons">
                         <a href="#features" class="btn btn-primary">了解更多</a>
                         <a href="#characters" class="btn btn-secondary">查看角色</a>
+                    </div>
+                    <!-- 视频播放按钮 -->
+                    <div style="margin-top: 20px;">
+                        <button class="btn btn-secondary" id="playVideo">
+                            <i>▶</i> 观看游戏预告片
+                        </button>
                     </div>
                 </div>
                 <div class="hero-image">
@@ -862,7 +986,7 @@
                     <div class="character-card">
                         <div class="character-inner">
                             <div class="character-img">
-                                <img src="9.webp" alt="阳光小兔">
+                                <img data-src="9.webp" src="placeholder.webp" alt="阳光小兔" class="lazy">
                             </div>
                             <div class="character-info">
                                 <h3 class="character-name">阳光小兔</h3>
@@ -875,7 +999,7 @@
                     <div class="character-card">
                         <div class="character-inner">
                             <div class="character-img">
-                                <img src="10.webp" alt="勇敢小熊">
+                                <img data-src="10.webp" src="placeholder.webp" alt="勇敢小熊" class="lazy">
                             </div>
                             <div class="character-info">
                                 <h3 class="character-name">勇敢小熊</h3>
@@ -888,7 +1012,7 @@
                     <div class="character-card">
                         <div class="character-inner">
                             <div class="character-img">
-                                <img src="11.webp" alt="智慧狐狸">
+                                <img data-src="11.webp" src="placeholder.webp" alt="智慧狐狸" class="lazy">
                             </div>
                             <div class="character-info">
                                 <h3 class="character-name">智慧狐狸</h3>
@@ -901,7 +1025,7 @@
                     <div class="character-card">
                         <div class="character-inner">
                             <div class="character-img">
-                                <img src="12.webp" alt="敏捷松鼠">
+                                <img data-src="12.webp" src="placeholder.webp" alt="敏捷松鼠" class="lazy">
                             </div>
                             <div class="character-info">
                                 <h3 class="character-name">敏捷松鼠</h3>
@@ -926,7 +1050,7 @@
                     <p class="testimonial-text">这款卡通游戏的画风太可爱了！我家孩子特别喜欢玩，操作简单，内容积极向上，每天玩一会儿既放松又有趣，强烈推荐给所有喜欢卡通风格游戏的玩家。</p>
                     <div class="testimonial-author">
                         <div class="author-avatar">
-                            <img src="13.webp" alt="用户头像-李小明"> <!-- 原11→13 -->
+                            <img data-src="13.webp" src="placeholder.webp" alt="用户头像-李小明" class="lazy"> <!-- 原11→13 -->
                         </div>
                         <div class="author-info">
                             <h4>李小明</h4>
@@ -939,7 +1063,7 @@
                     <p class="testimonial-text">作为一个卡通游戏爱好者，这款游戏真的超出了我的预期。角色设计非常用心，关卡也很有创意，而且更新频率很高，每次都有新的惊喜，值得一玩！</p>
                     <div class="testimonial-author">
                         <div class="author-avatar">
-                            <img src="14.webp" alt="用户头像-王小花"> <!-- 原12→14 -->
+                            <img data-src="14.webp" src="placeholder.webp" alt="用户头像-王小花" class="lazy"> <!-- 原12→14 -->
                         </div>
                         <div class="author-info">
                             <h4>王小花</h4>
@@ -955,11 +1079,17 @@
     <section class="cta" id="cta">
         <div class="container">
             <h2 class="cta-title">立即预约 抢先体验</h2>
+            <!-- 倒计时 -->
+            <div id="countdown"></div>
             <p class="cta-desc">填写你的邮箱，我们将在游戏上线第一时间通知你，并赠送独家预约礼包，包含限定角色和游戏道具！</p>
             <form class="cta-form" id="ctaForm">
                 <input type="email" class="cta-input" placeholder="请输入你的邮箱地址" required>
                 <button type="submit" class="cta-btn">立即预约</button>
             </form>
+            <!-- 预约人数统计 -->
+            <div id="bookingCount">
+                已有 <span>12,345</span> 位玩家预约
+            </div>
         </div>
     </section>
 
@@ -1019,6 +1149,16 @@
 
     <!-- 回到顶部按钮 -->
     <div class="back-to-top" id="backToTop">↑</div>
+
+    <!-- 视频弹窗 -->
+    <div id="videoModal">
+        <button id="closeVideo">&times;</button>
+        <!-- 核心修改：将视频源改为同文件夹的1.mp4 -->
+        <video id="gameVideo" controls poster="video-cover.webp">
+            <source src="1.mp4" type="video/mp4">
+            你的浏览器不支持HTML5视频播放
+        </video>
+    </div>
 
     <script>
         // 页面加载完成后隐藏加载动画
@@ -1125,16 +1265,221 @@
 
         // 预约表单提交验证
         const ctaForm = document.getElementById('ctaForm');
+        let bookingCount = 12345;
+        const bookingElement = document.querySelector('#bookingCount span');
+        
         ctaForm.addEventListener('submit', function(e) {
             e.preventDefault();
             const emailInput = this.querySelector('input[type="email"]');
             const email = emailInput.value;
             
             if (email && email.includes('@')) {
+                // 更新预约人数
+                bookingCount += 1;
+                bookingElement.textContent = bookingCount.toLocaleString();
+                
                 alert(`感谢你的预约！我们已向 ${email} 发送了确认邮件，请查收。`);
                 this.reset();
             } else {
                 alert('请输入有效的邮箱地址！');
+            }
+        });
+
+        // 1. 角色详情弹窗功能
+        document.querySelectorAll('.character-inner').forEach(card => {
+            card.addEventListener('click', function() {
+                // 获取角色信息
+                const charName = this.querySelector('.character-name').textContent;
+                const charRole = this.querySelector('.character-role').textContent;
+                const charDesc = this.querySelector('.character-desc').textContent;
+                const charImg = this.querySelector('.character-img img').dataset.src || this.querySelector('.character-img img').src;
+                
+                // 创建弹窗
+                const modal = document.createElement('div');
+                modal.className = 'character-modal';
+                modal.innerHTML = `
+                    <div style="background: white; border-radius: 20px; width: 100%; max-width: 800px; overflow: hidden; display: flex; flex-direction: column; max-height: 90vh;">
+                        <div style="padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee;">
+                            <h2 style="color: var(--primary-color); margin: 0;">${charName}</h2>
+                            <button class="close-modal" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #999;">&times;</button>
+                        </div>
+                        <div style="display: flex; flex: 1; overflow: auto;">
+                            <div style="flex: 1; padding: 30px;">
+                                <img src="${charImg}" alt="${charName}" style="width: 100%; height: auto; border-radius: 10px;">
+                            </div>
+                            <div style="flex: 1.5; padding: 30px;">
+                                <div style="background: rgba(106, 90, 205, 0.1); color: var(--primary-color); padding: 8px 20px; border-radius: 50px; display: inline-block; margin-bottom: 20px;">
+                                    ${charRole}
+                                </div>
+                                <p style="font-size: 16px; line-height: 1.8; color: #666; margin-bottom: 20px;">${charDesc}</p>
+                                <h4 style="color: #333; margin-bottom: 10px;">技能特色：</h4>
+                                <ul style="color: #666; line-height: 1.8; padding-left: 20px;">
+                                    ${charName === '阳光小兔' ? 
+                                        '<li>治愈光波：恢复全体队友30%生命值</li><li>快乐光环：提升队友10%移动速度</li><li>爱心护盾：为血量最低队友添加护盾</li>' :
+                                        charName === '勇敢小熊' ?
+                                        '<li>重拳出击：造成150%物理伤害</li><li>坚不可摧：5秒内减免50%伤害</li><li>群体嘲讽：吸引所有敌人攻击自己</li>' :
+                                        charName === '智慧狐狸' ?
+                                        '<li>火焰魔法：对范围内敌人造成120%魔法伤害</li><li>冰霜陷阱：减速敌人80%，持续3秒</li><li>雷电冲击：单体高额爆发伤害</li>' :
+                                        '<li>疾风突袭：快速位移并造成暴击</li><li>隐身术：5秒内进入隐身状态</li><li>致命一击：背击造成200%伤害</li>'
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                document.body.appendChild(modal);
+                document.body.style.overflow = 'hidden';
+                
+                // 关闭弹窗
+                modal.querySelector('.close-modal').addEventListener('click', function() {
+                    modal.remove();
+                    document.body.style.overflow = '';
+                });
+                
+                // 点击空白处关闭
+                modal.addEventListener('click', function(e) {
+                    if (e.target === modal) {
+                        modal.remove();
+                        document.body.style.overflow = '';
+                    }
+                });
+            });
+        });
+
+        // 2. 原版视差滚动效果（未增强，保留初始版本）
+        window.addEventListener('scroll', function() {
+            const scrollY = window.scrollY;
+            const heroSection = document.querySelector('.hero');
+            
+            // 只在hero区域内生效
+            if (scrollY < heroSection.offsetHeight) {
+                const parallaxSpeed = 0.1; // 保留原始速度0.1
+                // 保留主角图片的漂浮动画
+                document.querySelector('.hero-image').style.transform = `translateY(${scrollY * parallaxSpeed}px)`;
+                document.querySelector('.decor-1').style.transform = `translateX(${scrollY * -0.05}px) translateY(${scrollY * 0.08}px)`;
+                document.querySelector('.decor-2').style.transform = `translateX(${scrollY * 0.07}px) translateY(${scrollY * -0.06}px)`;
+            }
+        });
+
+        // 3. 视频播放功能
+        const playVideoBtn = document.getElementById('playVideo');
+        const videoModal = document.getElementById('videoModal');
+        const closeVideoBtn = document.getElementById('closeVideo');
+        const gameVideo = document.getElementById('gameVideo');
+
+        playVideoBtn.addEventListener('click', function() {
+            videoModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            gameVideo.play();
+        });
+
+        closeVideoBtn.addEventListener('click', function() {
+            videoModal.style.display = 'none';
+            document.body.style.overflow = '';
+            gameVideo.pause();
+        });
+
+        videoModal.addEventListener('click', function(e) {
+            if (e.target === videoModal) {
+                videoModal.style.display = 'none';
+                document.body.style.overflow = '';
+                gameVideo.pause();
+            }
+        });
+
+        // 4. 倒计时功能（仅修改截止时间为2035-12-31，其他逻辑不变）
+        function updateCountdown() {
+            // 核心修改：将目标日期改为2035-12-31
+            const targetDate = new Date('2035-12-31 00:00:00').getTime();
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+            
+            // 计算时间差
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            
+            // 显示倒计时
+            document.getElementById('countdown').innerHTML = 
+                `游戏正式上线倒计时：${days}天 ${hours}时 ${minutes}分 ${seconds}秒`;
+            
+            // 倒计时结束
+            if (distance < 0) {
+                document.getElementById('countdown').innerHTML = '游戏已正式上线！';
+            }
+        }
+
+        // 初始化并每秒更新倒计时
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+
+        // 5. 模拟预约人数增长
+        setInterval(() => {
+            const randomAdd = Math.floor(Math.random() * 5);
+            bookingCount += randomAdd;
+            bookingElement.textContent = bookingCount.toLocaleString();
+        }, 30000); // 每30秒随机增加0-4人
+
+        // 6. 移动端汉堡菜单
+        const menuToggle = document.getElementById('menuToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const closeMenu = document.getElementById('closeMenu');
+
+        // 显示汉堡菜单（移动端）
+        function checkMobileMenu() {
+            if (window.innerWidth <= 768) {
+                menuToggle.style.display = 'block';
+            } else {
+                menuToggle.style.display = 'none';
+                mobileMenu.style.transform = 'translateX(100%)';
+                document.body.style.overflow = '';
+            }
+        }
+
+        // 初始化+窗口变化时检查
+        checkMobileMenu();
+        window.addEventListener('resize', checkMobileMenu);
+
+        // 打开菜单
+        menuToggle.addEventListener('click', function() {
+            mobileMenu.style.transform = 'translateX(0)';
+            document.body.style.overflow = 'hidden';
+        });
+
+        // 关闭菜单
+        closeMenu.addEventListener('click', function() {
+            mobileMenu.style.transform = 'translateX(100%)';
+            document.body.style.overflow = '';
+        });
+
+        // 点击菜单项关闭菜单
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', function() {
+                mobileMenu.style.transform = 'translateX(100%)';
+                document.body.style.overflow = '';
+            });
+        });
+
+        // 7. 图片懒加载
+        document.addEventListener("DOMContentLoaded", function() {
+            const lazyImages = [].slice.call(document.querySelectorAll("img.lazy"));
+            
+            if ("IntersectionObserver" in window) {
+                let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+                    entries.forEach(function(entry) {
+                        if (entry.isIntersecting) {
+                            let lazyImage = entry.target;
+                            lazyImage.src = lazyImage.dataset.src || lazyImage.src;
+                            lazyImageObserver.unobserve(lazyImage);
+                        }
+                    });
+                });
+                
+                lazyImages.forEach(function(lazyImage) {
+                    lazyImageObserver.observe(lazyImage);
+                });
             }
         });
     </script>
