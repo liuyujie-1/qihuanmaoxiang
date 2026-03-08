@@ -852,6 +852,147 @@
             font-size: 20px;
             font-weight: bold;
         }
+
+        /* ========== 新增：预约成功弹窗样式 ========== */
+        .success-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            padding: 20px;
+        }
+
+        .success-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .success-modal-content {
+            background: linear-gradient(135deg, #fff 0%, #f9f9ff 100%);
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 15px 50px rgba(106, 90, 205, 0.3);
+            transform: translateY(20px) scale(0.95);
+            transition: all 0.4s ease;
+            border: 4px solid var(--accent-color);
+        }
+
+        .success-modal.active .success-modal-content {
+            transform: translateY(0) scale(1);
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background-color: #4CAF50;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            animation: bounce 1s ease-in-out;
+        }
+
+        .success-icon i {
+            color: white;
+            font-size: 40px;
+            content: '✓';
+            display: block;
+        }
+
+        @keyframes bounce {
+            0% { transform: scale(0); }
+            70% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .success-title {
+            font-size: 32px;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .success-desc {
+            font-size: 18px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .success-email {
+            background-color: rgba(106, 90, 205, 0.1);
+            padding: 10px 20px;
+            border-radius: 50px;
+            color: var(--primary-color);
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 30px;
+        }
+
+        .success-gift {
+            background-color: rgba(255, 209, 102, 0.2);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .success-gift-title {
+            font-size: 18px;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .success-gift-list {
+            list-style: none;
+            color: #666;
+        }
+
+        .success-gift-list li {
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .success-gift-list li::before {
+            content: '🎁';
+            position: absolute;
+            left: 0;
+        }
+
+        .success-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            max-width: 200px;
+        }
+
+        .success-btn:hover {
+            background-color: #5a4bc8;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(106, 90, 205, 0.3);
+        }
     </style>
 </head>
 <body>
@@ -1160,6 +1301,28 @@
         </video>
     </div>
 
+    <!-- ========== 新增：预约成功弹窗 ========== -->
+    <div class="success-modal" id="successModal">
+        <div class="success-modal-content">
+            <div class="success-icon">
+                <i>✓</i>
+            </div>
+            <h3 class="success-title">预约成功！</h3>
+            <p class="success-desc">恭喜你成为奇幻冒险的预约玩家，我们已向你的邮箱发送了确认邮件</p>
+            <div class="success-email" id="successEmail"></div>
+            <div class="success-gift">
+                <div class="success-gift-title">🎁 独家预约礼包</div>
+                <ul class="success-gift-list">
+                    <li>限定皮肤 - 彩虹小兔</li>
+                    <li>游戏金币 × 8888</li>
+                    <li>高级经验药水 × 5</li>
+                    <li>稀有道具宝箱 × 1</li>
+                </ul>
+            </div>
+            <button class="success-btn" id="successBtn">确认并前往游戏</button>
+        </div>
+    </div>
+
     <script>
         // 页面加载完成后隐藏加载动画
         window.addEventListener('load', function() {
@@ -1263,10 +1426,13 @@
             });
         });
 
-        // 预约表单提交验证
+        // ========== 核心修改：预约表单提交逻辑（替换alert为精美弹窗） ==========
         const ctaForm = document.getElementById('ctaForm');
         let bookingCount = 12345;
         const bookingElement = document.querySelector('#bookingCount span');
+        const successModal = document.getElementById('successModal');
+        const successEmail = document.getElementById('successEmail');
+        const successBtn = document.getElementById('successBtn');
         
         ctaForm.addEventListener('submit', function(e) {
             e.preventDefault();
@@ -1278,10 +1444,31 @@
                 bookingCount += 1;
                 bookingElement.textContent = bookingCount.toLocaleString();
                 
-                alert(`感谢你的预约！我们已向 ${email} 发送了确认邮件，请查收。`);
+                // 显示成功弹窗
+                successEmail.textContent = email;
+                successModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                
+                // 重置表单
                 this.reset();
             } else {
                 alert('请输入有效的邮箱地址！');
+            }
+        });
+
+        // 成功弹窗按钮点击事件（跳转游戏页面）
+        successBtn.addEventListener('click', function() {
+            successModal.classList.remove('active');
+            document.body.style.overflow = '';
+            // 跳转到游戏页面
+            window.location.href = 'youxi.html';
+        });
+
+        // 点击弹窗外层关闭弹窗
+        successModal.addEventListener('click', function(e) {
+            if (e.target === successModal) {
+                successModal.classList.remove('active');
+                document.body.style.overflow = '';
             }
         });
 
